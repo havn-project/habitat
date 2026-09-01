@@ -12,8 +12,7 @@ use crate::command::user::key::generate::start;
 #[derive(Debug, Clone, Parser)]
 #[command(arg_required_else_help = true,
           help_template = "{name} {version} {author-section} \
-                           {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n",
-          about = "Generates a Habitat user key")]
+                           {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n")]
 pub(crate) struct UserKeyGenerateOptions {
     /// Name of the user key
     #[arg(value_name = "USER")]

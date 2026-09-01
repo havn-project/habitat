@@ -1,7 +1,8 @@
 use crate::error::Result as HabResult;
 use clap::Subcommand;
 use clap_v4 as clap;
-use habitat_common::ui::UI;
+use habitat_common::{consts::PRODUCT_NAME,
+                     ui::UI};
 
 mod key;
 use key::UserKeyCommand;
@@ -9,12 +10,13 @@ use key::UserKeyCommand;
 #[derive(Debug, Clone, Subcommand)]
 #[command(rename_all = "kebab-case",
           arg_required_else_help = true,
-          about = "Commands relating to Habitat users",
+          author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Commands relating to {} users", PRODUCT_NAME),
           help_template = "{name} {version} {author-section} \
                            {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n")]
 pub(crate) enum UserCommand {
-    /// Commands relating to Habitat user keys
-    #[command(subcommand)]
+    #[command(subcommand,
+              about = format!("Commands relating to {} user keys", PRODUCT_NAME))]
     Key(UserKeyCommand),
 }
 

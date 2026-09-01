@@ -40,9 +40,12 @@ pub(crate) struct PkgUploadOptions {
     #[arg(name = "FORCE", long = "force", action = ArgAction::SetTrue)]
     force: bool,
 
-    /// One or more filepaths to a Habitat Artifact (ex:
-    /// /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)
-    #[arg(name = "HART_FILE", required = true, value_parser = FileExistsValueParser)]
+    #[arg(name = "HART_FILE",
+          required = true,
+          value_parser = FileExistsValueParser,
+          help = format!("One or more filepaths to a {} Artifact (ex: \
+                          /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)",
+                         habitat_common::consts::PRODUCT_NAME))]
     hart_file: Vec<PathBuf>,
 
     #[command(flatten)]

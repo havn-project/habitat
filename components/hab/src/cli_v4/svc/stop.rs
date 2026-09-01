@@ -2,7 +2,8 @@ use clap_v4 as clap;
 
 use clap::Parser;
 
-use habitat_common::cli::clap_validators::HabPkgIdentValueParser;
+use habitat_common::{cli::clap_validators::HabPkgIdentValueParser,
+                     consts::PRODUCT_NAME};
 use habitat_core::{os::process::ShutdownTimeout,
                    package::PackageIdent};
 
@@ -10,9 +11,9 @@ use crate::{cli_v4::utils::RemoteSup,
             error::Result as HabResult,
             gateway_util};
 
-/// Stop a running Habitat service.
 #[derive(Clone, Debug, Parser)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Stop a running {} service", PRODUCT_NAME),
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct StopCommand {

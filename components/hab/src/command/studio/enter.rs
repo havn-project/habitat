@@ -25,8 +25,6 @@ pub const CERT_PATH_ENVVAR: &str = "CERT_PATH";
 pub const SSL_CERT_FILE_ENVVAR: &str = "SSL_CERT_FILE";
 pub const STUDIO_HOST_ARCH_ENVVAR: &str = "HAB_STUDIO_SECRET_HAB_STUDIO_HOST_ARCH";
 
-const STUDIO_PACKAGE_IDENT: &str = "chef/hab-studio";
-
 #[derive(Clone, Copy)]
 enum Sensitivity {
     PrintValue,
@@ -159,6 +157,9 @@ mod inner {
                 error::{Error,
                         Result},
                 exec};
+    use habitat_common::consts::{DEFAULT_HAB_STUDIO_PKG_IDENT,
+                                 DEFAULT_STUDIO_CMD,
+                                 PRODUCT_NAME};
     use habitat_core::{crypto::init,
                        env as henv,
                        fs::{am_i_root,
@@ -174,7 +175,6 @@ mod inner {
               str::FromStr};
 
     const SUDO_CMD: &str = "sudo";
-    const STUDIO_CMD: &str = "hab-studio";
     const STUDIO_CMD_ENVVAR: &str = "HAB_STUDIO_BINARY";
 
     pub async fn start(ui: &mut UI, args: &[OsString]) -> Result<()> {
@@ -192,9 +192,10 @@ mod inner {
                         init()?;
                         let version: Vec<&str> = VERSION.split('/').collect();
                         let ident = PackageIdent::from_str(&format!("{}/{}",
-                                                                    super::STUDIO_PACKAGE_IDENT,
+                                                                    DEFAULT_HAB_STUDIO_PKG_IDENT,
                                                                     version[0]))?;
-                        let command = exec::command_from_min_pkg(ui, STUDIO_CMD, &ident).await?;
+                        let command =
+                            exec::command_from_min_pkg(ui, DEFAULT_STUDIO_CMD, &ident).await?;
                         // This is a duplicate of the code in `hab pkg exec` and
                         // should be refactored as part of or after:
                         // https://github.com/habitat-sh/habitat/issues/6633
@@ -208,7 +209,7 @@ mod inner {
                             unsafe { env::set_var(key, value) };
                         }
 
-                        let mut display_args = STUDIO_CMD.to_string();
+                        let mut display_args = DEFAULT_STUDIO_CMD.to_string();
                         for arg in args {
                             display_args.push(' ');
                             display_args.push_str(arg.to_string_lossy().as_ref());
@@ -280,9 +281,10 @@ mod inner {
             None => {
                 ui.warn(format!("Could not find the `{}' command, is it in your PATH?",
                                 SUDO_CMD))?;
-                ui.warn("Running Habitat Studio requires root or administrator privileges. \
-                         Please retry this command as a super user or use a privilege-granting \
-                         facility such as sudo.")?;
+                ui.warn(format!("Running {} Studio requires root or administrator privileges. \
+                                 Please retry this command as a super user or use a \
+                                 privilege-granting facility such as sudo.",
+                                PRODUCT_NAME))?;
                 ui.br()?;
                 Err(Error::RootRequired)
             }
@@ -302,6 +304,7 @@ mod inner {
                         fs::find_command,
                         os::process,
                         package::PackageIdent}};
+    use habitat_common::consts::DEFAULT_HAB_STUDIO_PKG_IDENT;
     use std::{ffi::OsString,
               str::FromStr};
 
@@ -317,7 +320,7 @@ mod inner {
         init()?;
         let version: Vec<&str> = VERSION.split('/').collect();
         let ident =
-            PackageIdent::from_str(&format!("{}/{}", super::STUDIO_PACKAGE_IDENT, version[0]))?;
+            PackageIdent::from_str(&format!("{}/{}", DEFAULT_HAB_STUDIO_PKG_IDENT, version[0]))?;
         let pwsh_command = exec::command_from_min_pkg(ui, "pwsh.exe", &ident).await?;
         let studio_command = exec::command_from_min_pkg(ui, "hab-studio.ps1", &ident).await?;
 

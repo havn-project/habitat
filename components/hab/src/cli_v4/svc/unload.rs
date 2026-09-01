@@ -4,7 +4,8 @@ use std::convert::Into;
 
 use clap::Parser;
 
-use habitat_common::cli::clap_validators::HabPkgIdentValueParser;
+use habitat_common::{cli::clap_validators::HabPkgIdentValueParser,
+                     consts::PRODUCT_NAME};
 use habitat_core::{os::process::ShutdownTimeout,
                    package::PackageIdent};
 
@@ -12,10 +13,11 @@ use crate::{cli_v4::utils::RemoteSup,
             error::Result as HabResult,
             gateway_util};
 
-/// Unload a service loaded by the Habitat Supervisor. If the service is running, it will be stopped
-/// first.
 #[derive(Clone, Debug, Parser)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Unload a service loaded by the {} Supervisor. If the service is \
+                            running, it will be stopped first",
+                           PRODUCT_NAME),
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct UnloadCommand {

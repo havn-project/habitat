@@ -387,11 +387,13 @@ pub struct SharedLoad {
     #[arg(long = "channel")]
     pub channel: Option<ChannelIdent>,
 
-    /// Specify an alternate Builder endpoint. If not specified, the value will be taken from
-    /// the HAB_BLDR_URL environment variable if defined. (default: https://bldr.habitat.sh)
     // TODO (DM): This should probably use `env` and `default_value`
     // TODO (DM): serde nested flattens do no work https://github.com/serde-rs/serde/issues/1547
-    #[arg(long = "url", short = 'u')]
+    #[arg(long = "url", short = 'u',
+          help = format!("Specify an alternate Builder endpoint. If not specified, the value \
+                          will be taken from the HAB_BLDR_URL environment variable if defined. \
+                          (default: {})",
+                         habitat_common::consts::DEFAULT_BUILDER_URL))]
     pub bldr_url: Option<Url>,
 
     /// The service group with shared config and topology

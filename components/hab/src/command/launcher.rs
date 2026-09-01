@@ -1,7 +1,5 @@
 use crate::{VERSION,
-            command::sup::{SUP_CMD,
-                           SUP_CMD_ENVVAR,
-                           SUP_PKG_IDENT},
+            command::sup::SUP_CMD_ENVVAR,
             common::ui::UI,
             error::{Error,
                     Result},
@@ -11,6 +9,10 @@ use crate::{VERSION,
                     fs::find_command,
                     os::process,
                     package::PackageIdent}};
+use habitat_common::consts::{DEFAULT_HAB_LAUNCHER_PKG_IDENT,
+                             DEFAULT_HAB_SUP_PKG_IDENT,
+                             DEFAULT_LAUNCHER_CMD,
+                             DEFAULT_SUP_CMD};
 
 use std::{ffi::OsString,
           path::PathBuf,
@@ -18,9 +20,7 @@ use std::{ffi::OsString,
 
 use crate::cli_v4::sup::sup_run::SupRunOptions;
 
-const LAUNCH_CMD: &str = "hab-launch";
 const LAUNCH_CMD_ENVVAR: &str = "HAB_LAUNCH_BINARY";
-const LAUNCH_PKG_IDENT: &str = "chef/hab-launcher";
 
 pub(crate) async fn start_v4(ui: &mut UI, sup_run: SupRunOptions, args: &[OsString]) -> Result<()> {
     init()?;
@@ -28,9 +28,9 @@ pub(crate) async fn start_v4(ui: &mut UI, sup_run: SupRunOptions, args: &[OsStri
     if henv::var(SUP_CMD_ENVVAR).is_err() {
         let version: Vec<&str> = VERSION.split('/').collect();
         exec::command_from_min_pkg_with_channel(ui,
-                                                SUP_CMD,
+                                                DEFAULT_SUP_CMD,
                                                 &PackageIdent::from_str(&format!("{}/{}",
-                                                                                 SUP_PKG_IDENT,
+                                                                                 DEFAULT_HAB_SUP_PKG_IDENT,
                                                                                  version[0]))?,
                                                 channel.clone()).await?;
     }
@@ -39,8 +39,8 @@ pub(crate) async fn start_v4(ui: &mut UI, sup_run: SupRunOptions, args: &[OsStri
         Err(_) => {
             init()?;
             exec::command_from_min_pkg_with_channel(ui,
-                                                    LAUNCH_CMD,
-                                                    &PackageIdent::from_str(LAUNCH_PKG_IDENT)?,
+                                                    DEFAULT_LAUNCHER_CMD,
+                                                    &PackageIdent::from_str(DEFAULT_HAB_LAUNCHER_PKG_IDENT)?,
                                                     channel).await?
         }
     };

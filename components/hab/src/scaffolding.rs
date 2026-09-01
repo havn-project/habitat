@@ -94,9 +94,10 @@ fn autodiscover_scaffolding(ui: &mut UI) -> Result<Option<PackageIdent>> {
         Ok(Some(ident))
     } else {
         ui.warn("Unable to determine the type of app in your current directory")?;
-        ui.para("For now, we'll generate a plan with all of the available plan variables and \
-                 build phase callbacks. For more documentation on plan options visit \
-                 https://www.habitat.sh/docs/reference/plan-syntax/")?;
+        ui.para(&format!("For now, we'll generate a plan with all of the available plan \
+                          variables and build phase callbacks. For more documentation on plan \
+                          options visit {}/reference/plan-syntax/",
+                         habitat_common::consts::DEFAULT_DOCS_URL))?;
         Ok(None)
     }
 }

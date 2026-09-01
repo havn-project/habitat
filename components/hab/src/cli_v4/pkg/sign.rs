@@ -31,9 +31,10 @@ pub(crate) struct PkgSignOptions {
     #[arg(name = "SOURCE", value_parser = FileExistsValueParser)]
     source: PathBuf,
 
-    /// The destination path to the signed Habitat Artifact (ex:
-    /// /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)
-    #[arg(name = "DEST")]
+    #[arg(name = "DEST",
+          help = format!("The destination path to the signed {} Artifact (ex: \
+                          /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)",
+                         habitat_common::consts::PRODUCT_NAME))]
     dest: PathBuf,
 
     #[command(flatten)]

@@ -1,7 +1,8 @@
 use crate::error::Result as HabResult;
 use clap::Subcommand;
 use clap_v4 as clap;
-use habitat_common::ui::UI;
+use habitat_common::{consts::PRODUCT_NAME,
+                     ui::UI};
 
 mod create;
 mod demote;
@@ -18,7 +19,8 @@ use promote::PromoteOpts;
 #[derive(Debug, Clone, Subcommand)]
 #[command(rename_all = "kebab-case",
           arg_required_else_help = true,
-          about = "Commands relating to Habitat Builder channels",
+          author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Commands relating to {} Builder channels", PRODUCT_NAME),
           help_template = "{name} {version} {author-section} \
                            {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n")]
 pub(crate) enum ChannelCommand {

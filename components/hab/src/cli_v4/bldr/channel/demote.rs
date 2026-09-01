@@ -24,12 +24,14 @@ pub(crate) struct DemoteOpts {
     #[command(flatten)]
     token: AuthToken,
 
-    /// Specify an alternate Builder endpoint [env: HAB_BLDR_URL] [default: https://bldr.habitat.sh]
     #[arg(short = 'u',
           long = "url",
           value_name = "BLDR_URL",
-          env = "HAB_BLDR_URL",
-          default_value = "https://bldr.habitat.sh")]
+          env = crate::BLDR_URL_ENVVAR,
+          default_value = habitat_common::consts::DEFAULT_BUILDER_URL,
+          help = format!("Specify an alternate Builder endpoint [env: {}] [default: {}]",
+                         crate::BLDR_URL_ENVVAR,
+                         habitat_common::consts::DEFAULT_BUILDER_URL))]
     url: String,
 
     /// Sets the origin to which the channel belongs. Default is from 'HAB_ORIGIN' or cli.toml

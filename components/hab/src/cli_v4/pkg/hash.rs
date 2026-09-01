@@ -17,8 +17,9 @@ use crate::error::Result as HabResult;
 #[command(help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct PkgHashOptions {
-    /// Filepath to the Habitat Package file
-    #[arg(name = "SOURCE", value_parser = FileExistsValueParser)]
+    #[arg(name = "SOURCE",
+          value_parser = FileExistsValueParser,
+          help = format!("Filepath to the {} Package file", habitat_common::consts::PRODUCT_NAME))]
     source: Option<PathBuf>,
 }
 

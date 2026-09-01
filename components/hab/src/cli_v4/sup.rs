@@ -3,6 +3,7 @@ use clap_v4 as clap;
 use crate::error::Result as HabResult;
 use clap::Subcommand;
 use habitat_common::{FeatureFlag,
+                     consts::PRODUCT_NAME,
                      ui::UI};
 
 mod bash;
@@ -27,8 +28,8 @@ pub(super) enum SupCommand {
     /// Restart a Supervisor without restarting its services
     Restart(restart::SupRestartOptions),
 
-    /// Commands relating to a Habitat Supervisor's Control Gateway secret
-    #[command(subcommand)]
+    #[command(subcommand,
+              about = format!("Commands relating to a {} Supervisor's Control Gateway secret", PRODUCT_NAME))]
     Secret(secret::SupSecretOptions),
 
     // Basic Commands (sh, bash , terminate)
@@ -38,7 +39,7 @@ pub(super) enum SupCommand {
     /// Start an interactive Bash-like shell
     Bash(bash::SupBashCommand),
 
-    /// Gracefully terminate the Habitat Supervisor and all of its running services
+    #[command(about = format!("Gracefully terminate the {} Supervisor and all of its running services", PRODUCT_NAME))]
     Term(term::SupTermCommand),
 
     /// Run the supervisor (load config and start services)

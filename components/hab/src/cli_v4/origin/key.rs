@@ -13,7 +13,8 @@ use crate::{cli_v4::utils::{AuthToken,
             key_type::KeyType};
 use clap::Parser;
 
-use habitat_common::ui::UI;
+use habitat_common::{consts::PRODUCT_NAME,
+                     ui::UI};
 
 use std::{io::{self,
                Read},
@@ -69,7 +70,7 @@ pub(crate) enum OriginKeyCommand {
         cache_key_path: CacheKeyPath,
     },
 
-    /// Generates a Habitat origin key pair
+    #[command(about = format!("Generates a {} origin key pair", PRODUCT_NAME))]
     Generate {
         /// The origin name
         #[arg(name = "ORIGIN", value_parser = clap::value_parser!(Origin))]

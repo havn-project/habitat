@@ -18,8 +18,11 @@ use crate::{command::pkg::header,
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct PkgHeaderOptions {
-    /// A path to a Habitat Artifact (ex: /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)
-    #[arg(name = "SOURCE", value_parser = FileExistsValueParser)]
+    #[arg(name = "SOURCE",
+          value_parser = FileExistsValueParser,
+          help = format!("A path to a {} Artifact (ex: \
+                          /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)",
+                         habitat_common::consts::PRODUCT_NAME))]
     source: PathBuf,
 }
 

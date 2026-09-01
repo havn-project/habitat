@@ -40,6 +40,7 @@ use crate::{common::ui::{self,
                     users::get_current_username}};
 use chrono::{DateTime,
              Utc};
+use habitat_common::consts::PRODUCT_NAME;
 use serde::{Deserialize,
             Serialize};
 use std::{env,
@@ -50,7 +51,7 @@ use std::{env,
                  PathBuf}};
 
 const LICENSE_FILE_FORMAT_VERSION: &str = "1.0";
-const LICENSE_ACCEPT_ENVVAR: &str = "HAB_LICENSE";
+pub const LICENSE_ACCEPT_ENVVAR: &str = "HAB_LICENSE";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LicenseData {
@@ -64,7 +65,7 @@ pub struct LicenseData {
 impl LicenseData {
     pub fn new() -> Result<Self> {
         Ok(LicenseData { date_accepted: Utc::now(),
-                         accepting_product: String::from("hab"),
+                         accepting_product: String::from(habitat_common::consts::CLI_NAME),
                          accepting_product_version: super::VERSION.to_string(),
                          user: get_current_username()?,
                          file_format: String::from(LICENSE_FILE_FORMAT_VERSION), })
@@ -108,7 +109,7 @@ pub fn check_for_license_acceptance_and_prompt(ui: &mut UI) -> Result<()> {
             ui.br()?;
             ui.info("License that needs accepting:")?;
             ui.br()?;
-            ui.info("  * Habitat")?;
+            ui.info(format!("  * {}", PRODUCT_NAME))?;
             ui.br()?;
 
             if ui.prompt_yes_no("Do you accept the 1 product license?", Some(false))? {

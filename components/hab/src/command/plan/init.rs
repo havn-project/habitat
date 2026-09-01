@@ -125,10 +125,8 @@ pub fn start(ui: &mut UI,
     }
     ui.para("`/hooks/` contains automation hooks into your habitat.")?;
 
-    ui.para(
-        "For more information on any of the files: \
-         https://www.habitat.sh/docs/reference/plan-syntax/",
-    )?;
+    ui.para(&format!("For more information on any of the files: {}/reference/plan-syntax/",
+                     habitat_common::consts::DEFAULT_DOCS_URL))?;
 
     render_ignorefile(ui, &root)?;
 

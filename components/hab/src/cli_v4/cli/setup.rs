@@ -8,7 +8,8 @@ use habitat_core::crypto::keys::KeyCache;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone, Parser)]
-#[command(help_template = "{name} {version} {author-section} \
+#[command(author = habitat_common::consts::CLI_AUTHOR,
+          help_template = "{name} {version} {author-section} \
                            {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n",
           about = "Sets up the CLI with reasonable defaults")]
 pub(crate) struct CliSetupOptions {

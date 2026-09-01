@@ -22,7 +22,7 @@ mod exec;
 pub mod license;
 pub mod scaffolding;
 
-pub const PRODUCT: &str = "hab";
+pub const PRODUCT: &str = common::consts::CLI_NAME;
 pub const VERSION: &str = include_str!(concat!(env!("OUT_DIR"), "/VERSION"));
 pub const ORIGIN_ENVVAR: &str = "HAB_ORIGIN";
 pub const BLDR_URL_ENVVAR: &str = "HAB_BLDR_URL";

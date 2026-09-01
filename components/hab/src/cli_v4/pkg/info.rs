@@ -26,8 +26,11 @@ pub(crate) struct PkgInfoOptions {
           action = ArgAction::SetTrue)]
     json: bool,
 
-    /// A path to a Habitat Artifact (ex: /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)
-    #[arg(name = "SOURCE", value_parser = FileExistsValueParser)]
+    #[arg(name = "SOURCE",
+          value_parser = FileExistsValueParser,
+          help = format!("A path to a {} Artifact (ex: \
+                          /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)",
+                         habitat_common::consts::PRODUCT_NAME))]
     source: PathBuf,
 }
 

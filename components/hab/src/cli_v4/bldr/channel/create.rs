@@ -22,8 +22,8 @@ pub(crate) struct CreateOpts {
     #[arg(short = 'u',
           long,
           value_name = "BLDR_URL",
-          env = "HAB_BLDR_URL",
-          default_value = "https://bldr.habitat.sh")]
+          env = crate::BLDR_URL_ENVVAR,
+          default_value = habitat_common::consts::DEFAULT_BUILDER_URL)]
     url: String,
 
     /// Sets the origin to which the channel will belong. Default is from 'HAB_ORIGIN' or cli.toml

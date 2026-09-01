@@ -5,6 +5,7 @@ use clap_v4 as clap;
 use clap::Subcommand;
 
 use habitat_common::{FeatureFlag,
+                     consts::PRODUCT_NAME,
                      ui::UI};
 
 use crate::error::Result as HabResult;
@@ -52,7 +53,7 @@ mod sign;
 mod verify;
 
 #[derive(Clone, Debug, Subcommand)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = habitat_common::consts::CLI_AUTHOR,
           arg_required_else_help = true,
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
@@ -63,10 +64,10 @@ pub(super) enum PkgCommand {
     /// Creates a binlink for a package binary in a common 'PATH' location
     Binlink(binlink::PkgBinlinkOptions),
 
-    /// Builds a plan using Habitat Studio
+    #[command(about = format!("Builds a plan using {} Studio", PRODUCT_NAME))]
     Build(build::PkgBuildOptions),
 
-    /// Bulk uploads Habitat artifacts to builder depot from a local directory
+    #[command(about = format!("Bulk uploads {} artifacts to builder depot from a local directory", PRODUCT_NAME))]
     Bulkupload(bulk_upload::PkgBulkUploadOptions),
 
     /// Find out what channels a package belongs to
@@ -81,11 +82,10 @@ pub(super) enum PkgCommand {
     /// Demote a package from a specified channel
     Demote(demote::PkgDemoteOptions),
 
-    /// Returns Habitat Artifact dependencies, by default the direct dependencies
-    /// of the package
+    #[command(about = format!("Returns {} Artifact dependencies, by default the direct dependencies of the package", PRODUCT_NAME))]
     Dependencies(dependencies::PkgDependenciesOptions),
 
-    /// Download Habitat artifacts (including dependencies and keys) from Builder
+    #[command(about = format!("Download {} artifacts (including dependencies and keys) from Builder", PRODUCT_NAME))]
     Download(download::PkgDownloadOptions),
 
     /// Prints the runtime environment of a specific installed package
@@ -105,13 +105,13 @@ pub(super) enum PkgCommand {
     /// Generates a blake2b hashsum from a target at any given filepath
     Hash(hash::PkgHashOptions),
 
-    /// Returns the Habitat Artifact header
+    #[command(about = format!("Returns the {} Artifact header", PRODUCT_NAME))]
     Header(header::PkgHeaderOptions),
 
-    /// Returns the Habitat Artifact information
+    #[command(about = format!("Returns the {} Artifact information", PRODUCT_NAME))]
     Info(info::PkgInfoOptions),
 
-    /// Installs a Habitat package from Builder or locally from a Habitat Artifact
+    #[command(about = format!("Installs a {0} package from Builder or locally from a {0} Artifact", PRODUCT_NAME))]
     Install(install::PkgInstallOptions),
 
     /// List all versions of installed packages
@@ -123,22 +123,22 @@ pub(super) enum PkgCommand {
     /// Promote a package to a specified channel
     Promote(promote::PkgPromoteOptions),
 
-    /// Search installed Habitat packages for a given file
+    #[command(about = format!("Search installed {} packages for a given file", PRODUCT_NAME))]
     Provides(provides::PkgProvidesOptions),
 
     /// Search for a package in Builder
     Search(search::PkgSearchOptions),
 
-    /// Signs an archive with an origin key, generating a Habitat Artifact
+    #[command(about = format!("Signs an archive with an origin key, generating a {} Artifact", PRODUCT_NAME))]
     Sign(sign::PkgSignOptions),
 
     /// Safely uninstall a package and dependencies from a local filesystem
     Uninstall(uninstall::PkgUninstallOptions),
 
-    /// Uploads a local Habitat Artifact to Builder
+    #[command(about = format!("Uploads a local {} Artifact to Builder", PRODUCT_NAME))]
     Upload(upload::PkgUploadOptions),
 
-    /// Verifies a Habitat Artifact with an origin key
+    #[command(about = format!("Verifies a {} Artifact with an origin key", PRODUCT_NAME))]
     Verify(verify::PkgVerifyOptions),
 }
 

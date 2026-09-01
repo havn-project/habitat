@@ -5,7 +5,8 @@ use crate::{command::pkg::list,
             error::{Error,
                     Result}};
 use futures::stream::StreamExt;
-use habitat_common::{package_graph::PackageGraph,
+use habitat_common::{consts::DEFAULT_HAB_PKG_IDENT,
+                     package_graph::PackageGraph,
                      templating::hooks::{PackageMaintenanceHookExt,
                                          UninstallHook},
                      ui::{Status,
@@ -371,10 +372,10 @@ async fn maybe_delete<U>(ui: &mut U,
     let ident = install.ident();
     let pkg_root_path = hfs::pkg_root_path(Some(fs_root_path));
 
-    let hab = PackageIdent::from_str("chef/hab")?;
+    let hab = PackageIdent::from_str(DEFAULT_HAB_PKG_IDENT)?;
     if ident.satisfies(&hab) {
         ui.status(Status::Skipping,
-                  format!("{}. You can't uninstall chef/hab", &ident))?;
+                  format!("{}. You can't uninstall {}", &ident, DEFAULT_HAB_PKG_IDENT))?;
         return Ok(false);
     }
 

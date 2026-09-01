@@ -10,6 +10,7 @@ use std::path::PathBuf;
 #[derive(Debug, Clone, Parser)]
 #[command(arg_required_else_help = true,
           rename_all = "kebab-case",
+          author = habitat_common::consts::CLI_AUTHOR,
           help_template = "{name} {version} {author-section} {about-section}\n{usage-heading} \
                            {usage}\n\n{all-args}\n",
           about = "Uploads a file to be shared between members of a Service Group")]

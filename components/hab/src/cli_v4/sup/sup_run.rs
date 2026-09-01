@@ -22,6 +22,8 @@ use habitat_common::{cli::{RING_ENVVAR,
                            clap_validators::FileExistsValueParser,
                            is_toml_file},
                      command::package::install::InstallSource,
+                     consts::{DEFAULT_SUP_CONFIG_PATH,
+                              PRODUCT_NAME},
                      types::{EventStreamConnectMethod,
                              EventStreamMetaPair,
                              EventStreamServerCertificate,
@@ -222,10 +224,12 @@ pub struct SupRunOptions {
     #[arg(long = "ca-certs", requires_all = &["cert_file", "key_file"])]
     pub ca_cert_file: Option<PathBuf>,
 
-    /// Load a Habitat package as part of the Supervisor startup
-    ///
-    /// The package can be specified by a package identifier (ex: core/redis) or filepath to a
-    /// Habitat artifact (ex: /home/core-redis-3.0.7-21120102031201-x86_64-linux.hart).
+    #[arg(help = format!("Load a {} package as part of the Supervisor startup", PRODUCT_NAME),
+          long_help = format!("Load a {0} package as part of the Supervisor startup\n\n\
+                                The package can be specified by a package identifier (ex: \
+                                core/redis) or filepath to a {0} artifact (ex: \
+                                /home/core-redis-3.0.7-21120102031201-x86_64-linux.hart).",
+                               PRODUCT_NAME))]
     pub pkg_ident_or_artifact: Option<InstallSource>,
 
     /// Verbose output showing file and line/column numbers
@@ -345,11 +349,11 @@ impl SupRunOptions {
     /// just return the passed 'other' as it is after cleaning the 'config-files' value if any.
     pub fn maybe_merge_from_config_files(mut other: Self) -> HabResult<Self> {
         let config_files = if other.config_files.is_empty() {
-            let default_config_path = Path::new("/hab/sup/default/config/sup.toml");
+            let default_config_path = Path::new(DEFAULT_SUP_CONFIG_PATH);
             if default_config_path.exists() && default_config_path.is_file() {
-                vec!["/hab/sup/default/config/sup.toml"].into_iter()
-                                                        .map(Into::<PathBuf>::into)
-                                                        .collect::<Vec<PathBuf>>()
+                vec![DEFAULT_SUP_CONFIG_PATH].into_iter()
+                                             .map(Into::<PathBuf>::into)
+                                             .collect::<Vec<PathBuf>>()
             } else {
                 vec![]
             }

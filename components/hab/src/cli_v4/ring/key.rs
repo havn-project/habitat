@@ -1,7 +1,8 @@
 use crate::error::Result as HabResult;
 use clap::Subcommand;
 use clap_v4 as clap;
-use habitat_common::ui::UI;
+use habitat_common::{consts::PRODUCT_NAME,
+                     ui::UI};
 
 mod export;
 mod generate;
@@ -23,7 +24,7 @@ pub(crate) enum RingKeyCommand {
     /// Reads a stdin stream containing ring key contents and writes the key to disk
     Import(RingKeyImportOpts),
 
-    /// Generates a Habitat ring key
+    #[command(about = format!("Generates a {} ring key", PRODUCT_NAME))]
     Generate(RingKeyGenerateOpts),
 }
 

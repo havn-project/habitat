@@ -8,13 +8,13 @@ use crate::{VERSION,
                     fs::find_command,
                     os::process,
                     package::PackageIdent}};
+use habitat_common::consts::{DEFAULT_HAB_SUP_PKG_IDENT,
+                             DEFAULT_SUP_CMD};
 use std::{ffi::OsString,
           path::PathBuf,
           str::FromStr};
 
-pub const SUP_CMD: &str = "hab-sup";
 pub const SUP_CMD_ENVVAR: &str = "HAB_SUP_BINARY";
-pub const SUP_PKG_IDENT: &str = "chef/hab-sup";
 
 pub async fn start(ui: &mut UI, args: &[OsString]) -> Result<()> {
     let command = match henv::var(SUP_CMD_ENVVAR) {
@@ -23,9 +23,9 @@ pub async fn start(ui: &mut UI, args: &[OsString]) -> Result<()> {
             init()?;
             let version: Vec<&str> = VERSION.split('/').collect();
             exec::command_from_min_pkg(ui,
-                                       SUP_CMD,
+                                       DEFAULT_SUP_CMD,
                                        &PackageIdent::from_str(&format!("{}/{}",
-                                                                        SUP_PKG_IDENT,
+                                                                        DEFAULT_HAB_SUP_PKG_IDENT,
                                                                         version[0]))?).await?
         }
     };

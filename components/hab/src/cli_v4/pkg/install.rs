@@ -49,9 +49,11 @@ pub(crate) struct PkgInstallOptions {
                 env = habitat_core::ChannelIdent::ENVVAR)]
     channel: Option<ChannelIdent>,
 
-    /// One or more Habitat package identifiers (ex: acme/redis) and/or filepaths to a Habitat
-    /// Artifact (ex: /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)
-    #[arg(required = true)]
+    #[arg(required = true,
+          help = format!("One or more {0} package identifiers (ex: acme/redis) and/or \
+                          filepaths to a {0} Artifact (ex: \
+                          /home/acme-redis-3.0.7-21120102031201-x86_64-linux.hart)",
+                         habitat_common::consts::PRODUCT_NAME))]
     pkg_ident_or_artifact: Vec<InstallSource>,
 
     /// Binlink all binaries from installed package(s) into BINLINK_DIR

@@ -10,6 +10,7 @@ use std::io;
 
 #[derive(Debug, Clone, Parser)]
 #[command(arg_required_else_help = true,
+          author = habitat_common::consts::CLI_AUTHOR,
           help_template = "{name} {version} {author-section} \
                            {about-section}\n{usage-heading}\n{usage}\n\n{all-args}\n",
           about = "Creates command-line completers for your shell")]
@@ -23,7 +24,10 @@ impl CliCompletersOptions {
     pub(crate) fn do_completers(&self, _feature_flags: FeatureFlag) -> HabResult<()> {
         let mut cmd = Hab::command();
 
-        generate(self.shell, &mut cmd, "hab", &mut io::stdout());
+        generate(self.shell,
+                 &mut cmd,
+                 habitat_common::consts::CLI_NAME,
+                 &mut io::stdout());
 
         Ok(())
     }

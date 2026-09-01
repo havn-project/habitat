@@ -10,6 +10,8 @@ use serde::{Deserialize,
 
 use hab_common_derive::GenConfig;
 
+use habitat_common::consts::PRODUCT_NAME;
+
 use crate::{cli_v4::utils::{PkgIdent,
                             RemoteSup,
                             SharedLoad,
@@ -18,12 +20,13 @@ use crate::{cli_v4::utils::{PkgIdent,
                     Result as HabResult},
             gateway_util};
 
-/// Load a service to be started and supervised by Habitat from a package identifier If an installed
-/// package doesn't satisfy the given package identifier, a suitable package will be installed from
-/// Builder.
 #[derive(GenConfig)]
 #[derive(Clone, Debug, Parser, Serialize, Deserialize)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Load a service to be started and supervised by {0} from a package \
+                            identifier If an installed package doesn't satisfy the given package \
+                            identifier, a suitable package will be installed from Builder",
+                           PRODUCT_NAME),
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct LoadCommand {

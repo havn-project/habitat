@@ -1,7 +1,12 @@
 use log::{debug,
           warn};
 
-use crate::{VERSION,
+use crate::{AUTH_TOKEN_ENVVAR,
+            BLDR_URL_ENVVAR,
+            ORIGIN_ENVVAR,
+            REFRESH_CHANNEL_ENVVAR,
+            SECRET_REFRESH_CHANNEL_ENVVAR,
+            VERSION,
             command::studio::enter::{ARTIFACT_PATH_ENVVAR,
                                      CERT_PATH_ENVVAR,
                                      SSL_CERT_FILE_ENVVAR},
@@ -18,7 +23,10 @@ use crate::{VERSION,
                     os::process,
                     package::target,
                     util::docker},
-            license};
+            license,
+            license::LICENSE_ACCEPT_ENVVAR};
+use habitat_common::consts::{DEFAULT_DOCKER_STUDIO_IMAGE,
+                             DEFAULT_DOCKER_STUDIO_WINDOWS_IMAGE};
 use std::{env,
           ffi::{OsStr,
                 OsString},
@@ -27,8 +35,6 @@ use std::{env,
           process::{Command,
                     Stdio}};
 
-const DOCKER_IMAGE: &str = "habitat/default-studio";
-const DOCKER_WINDOWS_IMAGE: &str = "habitat/win-studio";
 const DOCKER_IMAGE_ENVVAR: &str = "HAB_DOCKER_STUDIO_IMAGE";
 const DOCKER_OPTS_ENVVAR: &str = "HAB_DOCKER_OPTS";
 const DOCKER_SOCKET: &str = "/var/run/docker.sock";
@@ -123,14 +129,14 @@ pub fn start_docker_studio(_ui: &mut UI, args: &[OsString]) -> Result<()> {
 
     let mut env_vars = vec![String::from("DEBUG"),
                             String::from("DO_CHECK"),
-                            String::from("HAB_AUTH_TOKEN"),
-                            String::from("HAB_BLDR_URL"),
+                            String::from(AUTH_TOKEN_ENVVAR),
+                            String::from(BLDR_URL_ENVVAR),
                             String::from("HAB_BLDR_CHANNEL"),
                             String::from("HAB_NOCOLORING"),
-                            String::from("HAB_LICENSE"),
-                            String::from("HAB_ORIGIN"),
+                            String::from(LICENSE_ACCEPT_ENVVAR),
+                            String::from(ORIGIN_ENVVAR),
                             String::from("HAB_ORIGIN_KEYS"),
-                            String::from("HAB_REFRESH_CHANNEL"),
+                            String::from(REFRESH_CHANNEL_ENVVAR),
                             String::from("HAB_STUDIO_INSTALL_PKGS"),
                             String::from("HAB_STUDIO_BACKLINE_PKG"),
                             String::from("HAB_STUDIO_NOPROFILE"),
@@ -160,7 +166,7 @@ pub fn start_docker_studio(_ui: &mut UI, args: &[OsString]) -> Result<()> {
     to_cull = OsString::from("-f");
     if let Some(index) = args.iter().position(|x| *x == to_cull) {
         args.remove(index);
-        let refresh_channel_key = format!("{}{}", HAB_STUDIO_SECRET, "HAB_REFRESH_CHANNEL");
+        let refresh_channel_key = SECRET_REFRESH_CHANNEL_ENVVAR.to_string();
         env_vars.push(refresh_channel_key.clone());
         // TODO: Audit that the environment access only happens in single-threaded code.
         unsafe { env::set_var(refresh_channel_key, args.remove(index)) };
@@ -333,7 +339,7 @@ fn run_container<I, J, S, T>(docker_cmd: PathBuf,
             debug!("Setting container env var: {:?}='{}'", var.as_ref(), val);
             cmd_args.push("--env".into());
             cmd_args.push(format!("{}={}", var.as_ref(), val).into());
-        } else if var.as_ref() == "HAB_LICENSE" && license::license_exists() {
+        } else if var.as_ref() == LICENSE_ACCEPT_ENVVAR && license::license_exists() {
             debug!("Hab license already accepted. Setting container env var: \
                     HAB_LICENSE=accept-no-persist");
             cmd_args.push("--env".into());
@@ -384,9 +390,9 @@ fn image_identifier_for_active_target(using_windows_containers: bool) -> Result<
 fn image_identifier(windows_base_tag: Option<&str>, target: target::PackageTarget) -> String {
     let version: Vec<&str> = VERSION.split('/').collect();
     let (img, tag) = if let Some(t) = windows_base_tag {
-        (DOCKER_WINDOWS_IMAGE, format!("{}-{}", t, version[0]))
+        (DEFAULT_DOCKER_STUDIO_WINDOWS_IMAGE, format!("{}-{}", t, version[0]))
     } else {
-        (DOCKER_IMAGE, version[0].to_string())
+        (DEFAULT_DOCKER_STUDIO_IMAGE, version[0].to_string())
     };
     let studio_target = studio_target(windows_base_tag.is_some(), target);
 
@@ -435,8 +441,8 @@ fn studio_target(windows: bool, target: target::PackageTarget) -> target::Packag
 
 #[cfg(test)]
 mod tests {
-    use super::{DOCKER_IMAGE,
-                DOCKER_WINDOWS_IMAGE,
+    use super::{DEFAULT_DOCKER_STUDIO_IMAGE,
+                DEFAULT_DOCKER_STUDIO_WINDOWS_IMAGE,
                 image_identifier,
                 update_ssl_cert_file_envvar};
     use crate::VERSION;
@@ -451,19 +457,29 @@ mod tests {
     #[cfg(feature = "supported_targets")]
     fn retrieve_supported_image_identifier() {
         assert_eq!(image_identifier(None, target::X86_64_DARWIN),
-                   format!("{}-{}:{}", DOCKER_IMAGE, "x86_64-linux", VERSION));
+                   format!("{}-{}:{}",
+                           DEFAULT_DOCKER_STUDIO_IMAGE, "x86_64-linux", VERSION));
         assert_eq!(image_identifier(None, target::X86_64_LINUX),
-                   format!("{}-{}:{}", DOCKER_IMAGE, "x86_64-linux", VERSION));
+                   format!("{}-{}:{}",
+                           DEFAULT_DOCKER_STUDIO_IMAGE, "x86_64-linux", VERSION));
         assert_eq!(image_identifier(None, target::AARCH64_LINUX),
-                   format!("{}-{}:{}", DOCKER_IMAGE, "aarch64-linux", VERSION));
+                   format!("{}-{}:{}",
+                           DEFAULT_DOCKER_STUDIO_IMAGE, "aarch64-linux", VERSION));
         assert_eq!(image_identifier(None, target::X86_64_WINDOWS),
-                   format!("{}-{}:{}", DOCKER_IMAGE, "x86_64-linux", VERSION));
+                   format!("{}-{}:{}",
+                           DEFAULT_DOCKER_STUDIO_IMAGE, "x86_64-linux", VERSION));
         assert_eq!(image_identifier(Some("ltsc2016"), target::X86_64_WINDOWS),
                    format!("{}-{}:{}-{}",
-                           DOCKER_WINDOWS_IMAGE, "x86_64-windows", "ltsc2016", VERSION));
+                           DEFAULT_DOCKER_STUDIO_WINDOWS_IMAGE,
+                           "x86_64-windows",
+                           "ltsc2016",
+                           VERSION));
         assert_eq!(image_identifier(Some("ltsc2016"), target::X86_64_LINUX),
                    format!("{}-{}:{}-{}",
-                           DOCKER_WINDOWS_IMAGE, "x86_64-windows", "ltsc2016", VERSION));
+                           DEFAULT_DOCKER_STUDIO_WINDOWS_IMAGE,
+                           "x86_64-windows",
+                           "ltsc2016",
+                           VERSION));
     }
 
     #[test]

@@ -3,6 +3,7 @@ use clap_v4 as clap;
 use clap::Parser;
 
 use habitat_common::{FeatureFlag,
+                     consts::PRODUCT_NAME,
                      ui::UI};
 
 use crate::command::sup::start;
@@ -58,10 +59,10 @@ use plan::PlanCommand;
 
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, Parser)]
-#[command(name = "hab",
+#[command(name = habitat_common::consts::CLI_NAME,
             version = VERSION,
-            about = "Patents: https://chef.io/patents\n\"A Habitat is the natural environment for your services\" - Alan Turing",
-            author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+            about = habitat_common::consts::CLI_ABOUT,
+            author = habitat_common::consts::CLI_AUTHOR,
             arg_required_else_help = true,
             propagate_version = true,
             term_width = 100,
@@ -69,11 +70,11 @@ use plan::PlanCommand;
                     \n{usage-heading} {usage}\n\n{all-args}\n",
         )]
 enum Hab {
-    /// Commands relating to Habitat Builder
+    #[command(about = format!("Commands relating to {} Builder", PRODUCT_NAME))]
     #[clap(subcommand)]
     Bldr(BldrCommand),
 
-    /// Commands relating to Habitat runtime config
+    #[command(about = format!("Commands relating to {} runtime config", PRODUCT_NAME))]
     #[clap(subcommand)]
     Cli(CliCommand),
 
@@ -81,19 +82,19 @@ enum Hab {
     #[clap(subcommand)]
     Config(ConfigCommand),
 
-    /// Commands relating to Habitat files
+    #[command(about = format!("Commands relating to {} files", PRODUCT_NAME))]
     #[clap(subcommand)]
     File(FileCommand),
 
-    /// Commands relating to Habitat license agreements
+    #[command(about = format!("Commands relating to {} license agreements", PRODUCT_NAME))]
     #[clap(subcommand)]
     License(LicenseCommand),
 
-    /// Commands relating to Habitat Builder origins
+    #[command(about = format!("Commands relating to {} Builder origins", PRODUCT_NAME))]
     #[clap(subcommand)]
     Origin(OriginCommand),
 
-    /// Commands relating to Habitat packages
+    #[command(about = format!("Commands relating to {} packages", PRODUCT_NAME))]
     #[clap(subcommand)]
     Pkg(PkgCommand),
 
@@ -101,31 +102,31 @@ enum Hab {
     #[clap(subcommand)]
     Plan(PlanCommand),
 
-    /// Commands relating to Habitat rings
+    #[command(about = format!("Commands relating to {} rings", PRODUCT_NAME))]
     #[clap(subcommand)]
     Ring(RingCommand),
 
-    /// Commands relating to Habitat Studios
     #[cfg(any(target_os = "macos",
               any(all(target_os = "linux",
                       any(target_arch = "x86_64", target_arch = "aarch64")),
                   all(target_os = "windows", target_arch = "x86_64"))))]
-    #[command(name = "studio")]
+    #[command(name = "studio",
+              about = format!("Commands relating to {} Studios", PRODUCT_NAME))]
     Studio(StudioOpts),
 
-    /// The Habitat Supervisor
+    #[command(about = format!("The {} Supervisor", PRODUCT_NAME))]
     #[clap(subcommand)]
     Sup(SupCommand),
 
-    /// Create a tarball of Habitat Supervisor data to send to support
-    #[command(name = "supportbundle")]
+    #[command(name = "supportbundle",
+              about = format!("Create a tarball of {} Supervisor data to send to support", PRODUCT_NAME))]
     SupportBundle(SupportBundleOpts),
 
-    /// Commands relating to Habitat Services
+    #[command(about = format!("Commands relating to {} Services", PRODUCT_NAME))]
     #[clap(subcommand)]
     Svc(SvcCommand),
 
-    /// Commands relating to Habitat users
+    #[command(about = format!("Commands relating to {} users", PRODUCT_NAME))]
     #[clap(subcommand)]
     User(UserCommand),
 }

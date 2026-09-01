@@ -8,7 +8,8 @@ use clap::Parser;
 use futures::stream::StreamExt;
 use tabwriter::TabWriter;
 
-use habitat_common::cli::clap_validators::HabPkgIdentValueParser;
+use habitat_common::{cli::clap_validators::HabPkgIdentValueParser,
+                     consts::PRODUCT_NAME};
 use habitat_core::package::PackageIdent;
 use habitat_sup_client::{SrvClient,
                          SrvClientError};
@@ -33,9 +34,9 @@ lazy_static::lazy_static! {
     };
 }
 
-/// Query the status of Habitat services
 #[derive(Clone, Debug, Parser)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = habitat_common::consts::CLI_AUTHOR,
+          about = format!("Query the status of {} services", PRODUCT_NAME),
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct StatusCommand {
