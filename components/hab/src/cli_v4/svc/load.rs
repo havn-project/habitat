@@ -23,7 +23,7 @@ use crate::{cli_v4::utils::{PkgIdent,
 /// Builder.
 #[derive(GenConfig)]
 #[derive(Clone, Debug, Parser, Serialize, Deserialize)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = "\nHavn Project",
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct LoadCommand {

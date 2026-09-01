@@ -58,10 +58,10 @@ use plan::PlanCommand;
 
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, Parser)]
-#[command(name = "hab",
+#[command(name = "hav",
             version = VERSION,
             about = "Patents: https://chef.io/patents\n\"A Habitat is the natural environment for your services\" - Alan Turing",
-            author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+            author = "\nHavn Project",
             arg_required_else_help = true,
             propagate_version = true,
             term_width = 100,

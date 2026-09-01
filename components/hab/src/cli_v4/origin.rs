@@ -15,7 +15,7 @@ mod rbac;
 mod transfer;
 
 #[derive(Clone, Debug, Subcommand)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = "\nHavn Project",
           about = "Commands relating to Habitat Builder origins",
           arg_required_else_help = true,
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \

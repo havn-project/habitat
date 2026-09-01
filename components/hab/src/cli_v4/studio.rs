@@ -7,7 +7,7 @@ use clap::Args;
 use habitat_common::ui::UI;
 
 #[derive(Clone, Debug, Args)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = "\nHavn Project",
           about = "Commands relating to Habitat Studios",
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]

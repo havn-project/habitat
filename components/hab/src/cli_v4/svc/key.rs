@@ -14,7 +14,7 @@ use crate::{cli_v4::utils::CacheKeyPath,
 
 /// Commands relating to Habitat service keys
 #[derive(Clone, Debug, Parser)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = "\nHavn Project",
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) enum KeyCommand {
@@ -23,7 +23,7 @@ pub(crate) enum KeyCommand {
 
 /// Generates a Habitat service key
 #[derive(Clone, Debug, Parser)]
-#[command(author = "\nThe Habitat Maintainers <humans@habitat.sh>",
+#[command(author = "\nHavn Project",
           help_template = "{name} {version} {author-section} {about-section} \n{usage-heading} \
                            {usage}\n\n{all-args}\n")]
 pub(crate) struct KeyGenerate {
